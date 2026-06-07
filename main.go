@@ -1,33 +1,32 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"net/http"
 	"sync"
-	"time"
 )
 
 func main() {
 
-	url := flag.String("url", "https://jsonplaceholder.typicode.com/todos/1", "Target URL")
-	totalRequests := flag.Int("n", 10, "Total number of requests")
-	concurrentRequests := flag.Int("c", 3, "Number of concurrent requests")
-	timeoutSeconds := flag.Int("timeout", 10, "Request timeout in seconds")
+	config := parseConfig()
 
-	flag.Parse()
+	if err := validateConfig(config); err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
 	client := &http.Client{
-		Timeout: time.Duration(*timeoutSeconds) * time.Second,
+		Timeout: config.Timeout,
 	}
 
 	var wg sync.WaitGroup
 
 	// results channel stores the results of requests &
 	// sem limits the number of concurrent requests
-	results := make(chan Result, *concurrentRequests)
-	sem := make(chan struct{}, *concurrentRequests)
+	results := make(chan Result, config.ConcurrentRequests)
+	sem := make(chan struct{}, config.ConcurrentRequests)
 
-	for i := 0; i < *totalRequests; i++ {
+	for i := 0; i < config.TotalRequests; i++ {
 		wg.Add(1)
 
 		go func() {
@@ -36,7 +35,7 @@ func main() {
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
-			result := fetch(client, *url)
+			result := fetch(client, config.URL)
 			results <- result
 		}()
 	}
