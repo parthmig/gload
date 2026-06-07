@@ -1,13 +1,14 @@
 package main
 
 import (
+	"io"
 	"net/http"
 	"time"
 )
 
 type Result struct {
 	StatusCode int
-	LatencyMs  float64
+	LatencyMs  time.Duration
 	Error      error
 }
 
@@ -22,10 +23,17 @@ func fetch(url string) Result {
 	resp, err := client.Get(url)
 	// if there is an error, return the error and latency as 0
 	if err != nil {
-		return Result{Error: err, LatencyMs: 0}
+		return Result{Error: err}
 	}
+	// close the response body
 	defer resp.Body.Close()
+	// discard the response body
+	_, err = io.Copy(io.Discard, resp.Body)
+	if err != nil {
+		return Result{StatusCode: resp.StatusCode, Error: err}
+	}
 	// calculate latency
-	latencyMs := time.Since(start).Seconds() * 1000
-	return Result{StatusCode: resp.StatusCode, LatencyMs: latencyMs, Error: nil}
+	latency := time.Since(start)
+
+	return Result{StatusCode: resp.StatusCode, LatencyMs: latency, Error: nil}
 }
