@@ -32,7 +32,7 @@ func runLoadTest(client *http.Client, config Config) []Result {
 		close(results)
 	}()
 
-	var allResults []Result
+	allResults := make([]Result, 0, config.TotalRequests)
 	for result := range results {
 		allResults = append(allResults, result)
 	}

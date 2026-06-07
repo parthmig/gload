@@ -50,9 +50,18 @@ func printSummary(config Config, summary Stats) {
 	fmt.Println()
 	fmt.Println("Latency")
 	fmt.Println("-------")
-	fmt.Printf("Min:         %s\n", formatDuration(summary.Min))
-	fmt.Printf("Max:         %s\n", formatDuration(summary.Max))
-	fmt.Printf("P50:         %s\n", formatDuration(summary.P50))
-	fmt.Printf("P95:         %s\n", formatDuration(summary.P95))
-	fmt.Printf("P99:         %s\n", formatDuration(summary.P99))
+
+	if summary.Successes == 0 {
+		fmt.Println("Min:         N/A")
+		fmt.Println("Max:         N/A")
+		fmt.Println("P50:         N/A")
+		fmt.Println("P95:         N/A")
+		fmt.Println("P99:         N/A")
+	} else {
+		fmt.Printf("Min:         %s\n", formatDuration(summary.Min))
+		fmt.Printf("Max:         %s\n", formatDuration(summary.Max))
+		fmt.Printf("P50:         %s\n", formatDuration(summary.P50))
+		fmt.Printf("P95:         %s\n", formatDuration(summary.P95))
+		fmt.Printf("P99:         %s\n", formatDuration(summary.P99))
+	}
 }
