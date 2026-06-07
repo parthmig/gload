@@ -20,7 +20,7 @@ func main() {
 
 	// results channel stores the results of requests &
 	// sem limits the number of concurrent requests
-	results := make(chan Result, totalRequests)
+	results := make(chan Result, concurrentRequests)
 	sem := make(chan struct{}, concurrentRequests)
 
 	for i := 0; i < totalRequests; i++ {
@@ -41,9 +41,11 @@ func main() {
 		wg.Wait()
 		close(results)
 	}()
-
+	var allResults []Result
 	for result := range results {
-		fmt.Printf("%+v\n", result)
+		allResults = append(allResults, result)
 	}
+
+	fmt.Printf("collected %d results\n", len(allResults))
 
 }
