@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -46,6 +45,7 @@ func main() {
 		allResults = append(allResults, result)
 	}
 
-	fmt.Printf("collected %d results\n", len(allResults))
+	summary := calculateStats(allResults)
+	printSummary(summary)
 
 }
