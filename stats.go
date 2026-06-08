@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"slices"
 	"time"
 )
@@ -56,9 +57,9 @@ func calculateStats(results []Result) Stats {
 
 	min := latencies[0]
 	max := latencies[len(latencies)-1]
-	p50 := latencies[int(float64(len(latencies)-1)*0.50)]
-	p95 := latencies[int(float64(len(latencies)-1)*0.95)]
-	p99 := latencies[int(float64(len(latencies)-1)*0.99)]
+	p50 := percentile(latencies, 0.50)
+	p95 := percentile(latencies, 0.95)
+	p99 := percentile(latencies, 0.99)
 
 	return Stats{
 		Total:        totalRequests,
@@ -71,4 +72,20 @@ func calculateStats(results []Result) Stats {
 		P95:          p95,
 		P99:          p99,
 	}
+}
+
+func percentile(sortedLatencies []time.Duration, p float64) time.Duration {
+	if len(sortedLatencies) == 0 {
+		return 0
+	}
+
+	index := int(math.Ceil(p*float64(len(sortedLatencies)))) - 1
+	if index < 0 {
+		index = 0
+	}
+	if index >= len(sortedLatencies) {
+		index = len(sortedLatencies) - 1
+	}
+
+	return sortedLatencies[index]
 }
