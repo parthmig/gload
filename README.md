@@ -27,6 +27,18 @@ Run against a specific URL:
 go run . -url https://example.com -n 100 -c 10 -timeout 10
 ```
 
+Build a local binary:
+
+```sh
+go build -o gload
+```
+
+Run the binary:
+
+```sh
+./gload -url https://example.com -n 100 -c 10 -timeout 10
+```
+
 ## Flags
 
 ```text
@@ -35,6 +47,8 @@ go run . -url https://example.com -n 100 -c 10 -timeout 10
 -c        Number of concurrent requests
 -timeout  Request timeout in seconds
 ```
+
+The URL must be an absolute `http` or `https` URL. Concurrency must be greater than `0` and cannot be greater than the total number of requests.
 
 Example:
 
@@ -85,6 +99,20 @@ runner.go  Concurrent request runner
 fetch.go   Single HTTP request logic
 stats.go   Result aggregation and latency stats
 output.go  CLI output formatting
+```
+
+## Testing
+
+Run the test suite:
+
+```sh
+go test ./...
+```
+
+Format the code:
+
+```sh
+gofmt -w .
 ```
 
 ## Notes
