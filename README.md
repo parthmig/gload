@@ -117,6 +117,10 @@ Format the code:
 gofmt -w .
 ```
 
+## License
+
+MIT
+
 ## Notes
 
 This is intentionally a small utility, not a replacement for mature load testing tools like `ab`, `hey`, or `wrk`.
