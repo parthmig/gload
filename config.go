@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	neturl "net/url"
+	"strings"
 	"time"
 )
 
@@ -42,8 +44,17 @@ func validateConfig(config Config) error {
 		return fmt.Errorf("timeout must be greater than 0")
 	}
 
-	if config.URL == "" {
+	if strings.TrimSpace(config.URL) == "" {
 		return fmt.Errorf("url must not be empty")
+	}
+
+	parsedURL, err := neturl.Parse(config.URL)
+	if err != nil || parsedURL.Host == "" {
+		return fmt.Errorf("url must be a valid absolute URL")
+	}
+
+	if parsedURL.Scheme != "http" && parsedURL.Scheme != "https" {
+		return fmt.Errorf("url must use http or https")
 	}
 
 	if config.ConcurrentRequests > config.TotalRequests {
