@@ -58,6 +58,8 @@ go run . -url https://httpbin.org/status/200,404,500 -n 20 -c 5
 
 Example output:
 
+Because the endpoint returns one of several status codes, exact counts and latency values may vary.
+
 ```text
 Load Test Summary
 =================
@@ -72,22 +74,22 @@ Timeout:     10s
 Counts
 ------
 Total:       20
-Successful:  4
-Errors:      16
+Successful:  6
+Errors:      14
 
 Status Codes
 ------------
-200:         4
-404:         7
-500:         9
+200:         6
+404:         9
+500:         5
 
 Latency
 -------
-Min:         37.10ms
-Max:         181.70ms
-P50:         39.57ms
-P95:         41.54ms
-P99:         41.54ms
+Min:         34.28ms
+Max:         214.53ms
+P50:         35.71ms
+P95:         214.53ms
+P99:         214.53ms
 ```
 
 ## Project Structure
